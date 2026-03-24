@@ -28,7 +28,32 @@ logger = logging.getLogger(__name__)
 # 钉钉机器人 WebHook
 DINGTALK_WEBHOOK = "https://oapi.dingtalk.com/robot/send?access_token=b3bfa45e38e33052f657800ef86c7d3538b3e02aa53af040fadbb47194ec8c60"
 # 筛选关键词（只保留 AI/Agent 相关项目）
-AI_KEYWORDS = ["ai", "agent", "llm", "claude", "gpt", "openai", "agi", "mcp", "rag", "agentic", "framework", "dify", "ragflow"]
+AI_KEYWORDS = [
+    # 基础大类
+    "ai", "agent", "llm", "agi", "gpt", "openai", "claude", "gemini", "deepseek", "qwen", "tongyi",
+
+    # MCP 生态（重点关注的方向）
+    "mcp", "model-control-plane", "mcp-server", "mcp-client", "mcp-framework",
+
+    # Agent 体系
+    "agentic", "multi-agent", "agentops", "agent-cloud", "agent-framework", "agent-workflow",
+    "autogen", "crewai", "meta-agent", "super-agent",
+
+    # RAG 相关
+    "rag", "retrieval-augmented-generation", "vector-db", "embedding", "knowledge-base",
+
+    # LLM 运维与开发
+    "llmops", "finetune", "prompt-engineering", "tool-call", "function-calling", "inference",
+
+    # 主流框架/平台
+    "langchain", "llamaindex", "dify", "ragflow", "coze", "openclaw", "flowise",
+
+    # 核心能力
+    "memory", "tool-use", "planning", "reasoning", "reflection", "orchestration",
+
+    # 基础设施
+    "ai-infra", "agent-infra", "llm-infra", "production-grade", "enterprise-ready"
+]
 # 🔴 严格按要求：仅展示前 5 条数据
 SHOW_COUNT = 5
 # 翻译配置：MyMemory 免费翻译 API
