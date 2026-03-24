@@ -1,3 +1,11 @@
+---
+name: github-ai-weekly
+description: 自动生成 GitHub 热门 AI 项目榜单，定时推送到钉钉
+author: sangshy
+version: 1.0.0
+tags: [github, ai, weekly, dingtalk, trending]
+---
+
 # GitHub AI 开源项目周报
 
 ## 技能描述
