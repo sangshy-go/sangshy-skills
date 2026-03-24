@@ -31,7 +31,8 @@ Skill 是 AI 助手的扩展能力模块，每个 Skill 都是一个独立的功
 
 ## 📦 当前收录的 Skills
 
-### 1️⃣ GitHub AI 开源项目周报 📊
+<details>
+<summary><strong>1️⃣ GitHub AI 开源项目周报 📊</strong> （点击展开详情）</summary>
 
 **目录**: [`github-ai-weekly-skill/`](./github-ai-weekly-skill/)
 
@@ -92,6 +93,8 @@ python3 main.py
 ```
 
 **详细文档**: [查看完整 README](./github-ai-weekly-skill/README.md)
+
+</details>
 
 ---
 
