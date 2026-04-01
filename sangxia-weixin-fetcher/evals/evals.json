@@ -1,0 +1,26 @@
+{
+  "skill_name": "sangxia-weixin-fetcher",
+  "evals": [
+    {
+      "id": 1,
+      "eval_name": "tech-article-extraction",
+      "prompt": "读取这篇文章的内容：https://mp.weixin.qq.com/s/udSpp7eMqwiRo5yVShRzLw",
+      "expected_output": "提取文章标题、公众号名称、作者、发布时间和正文内容，输出 Markdown 格式",
+      "files": []
+    },
+    {
+      "id": 2,
+      "eval_name": "simple-link-trigger",
+      "prompt": "https://mp.weixin.qq.com/s/xxxx",
+      "expected_output": "自动识别微信链接并读取内容，返回文章摘要",
+      "files": []
+    },
+    {
+      "id": 3,
+      "eval_name": "summary-request",
+      "prompt": "帮我总结一下这篇微信文章：https://mp.weixin.qq.com/s/yyyy",
+      "expected_output": "读取文章后生成内容总结，包含主要观点",
+      "files": []
+    }
+  ]
+}

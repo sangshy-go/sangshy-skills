@@ -8,6 +8,7 @@
 """
 
 import argparse
+import sys
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -35,12 +36,17 @@ class WeixinFetcher:
             
             soup = BeautifulSoup(response.text, 'html.parser')
             
+            # 提取元数据
+            title = self._extract_text(soup, ['h1.rich_media_title', 'h1', 'title'])
+            account = self._extract_account(soup)
+            publish_time = self._extract_publish_time(soup)
+            
             return {
                 'success': True,
-                'title': self._extract_text(soup, ['h1.rich_media_title', 'h1', 'title']),
-                'account': self._extract_text(soup, ['div.rich_media_meta_nickname', 'span.profile_nickname']),
+                'title': title,
+                'account': account,
                 'author': self._extract_author(soup),
-                'publish_time': self._extract_time(soup),
+                'publish_time': publish_time,
                 'content': self._extract_content(soup),
                 'images': self._extract_images(soup),
                 'stats': self._calculate_stats(soup),
@@ -57,6 +63,14 @@ class WeixinFetcher:
                 return elem.get_text(strip=True)
         return ''
     
+    def _extract_account(self, soup: BeautifulSoup) -> str:
+        """提取公众号名称"""
+        # 使用 CSS 选择器查找
+        elem = soup.select_one('.rich_media_meta_nickname')
+        if elem:
+            return elem.get_text(strip=True)
+        return ''
+    
     def _extract_author(self, soup: BeautifulSoup) -> str:
         """提取作者"""
         elem = soup.find('div', class_='rich_media_meta_text')
@@ -65,11 +79,18 @@ class WeixinFetcher:
             return text.replace('作者', '').strip() if '作者' in text else '佚名'
         return '佚名'
     
-    def _extract_time(self, soup: BeautifulSoup) -> str:
+    def _extract_publish_time(self, soup: BeautifulSoup) -> str:
         """提取发布时间"""
-        elem = soup.find('span', class_='rich_media_meta_text')
-        if elem:
-            return elem.get_text(strip=True)
+        # 查找包含时间的元素
+        meta_text = soup.find('div', class_='rich_media_meta_text')
+        if meta_text:
+            # 尝试提取时间部分（通常在最后）
+            text = meta_text.get_text(strip=True)
+            # 简单的日期格式匹配
+            import re
+            date_match = re.search(r'\d{4}年\d{1,2}月\d{1,2}日', text)
+            if date_match:
+                return date_match.group()
         return datetime.now().strftime('%Y-%m-%d')
     
     def _extract_content(self, soup: BeautifulSoup) -> str:
@@ -79,12 +100,23 @@ class WeixinFetcher:
             return ''
         
         paragraphs = []
-        for p in content_div.find_all(['p', 'section'], recursive=False):
-            text = p.get_text(strip=True)
-            if text:
+        # 查找所有段落标签（p, section, div 等）
+        for tag in content_div.find_all(['p', 'section', 'div'], recursive=True):
+            text = tag.get_text(strip=True)
+            # 忽略太短或空的段落
+            if text and len(text) > 10:
                 paragraphs.append(text)
         
-        return '\n\n'.join(paragraphs)
+        # 去重（微信文章有时会重复）
+        seen = set()
+        unique_paragraphs = []
+        for p in paragraphs:
+            if p not in seen:
+                seen.add(p)
+                unique_paragraphs.append(p)
+        
+        # 用两个换行符分隔段落，形成 Markdown 段落
+        return '\n\n'.join(unique_paragraphs)
     
     def _extract_images(self, soup: BeautifulSoup) -> list:
         """提取图片"""
@@ -133,37 +165,49 @@ class WeixinFetcher:
 
 def main():
     parser = argparse.ArgumentParser(description='读取微信公众号文章内容')
-    parser.add_argument('url', nargs='?', help='微信文章链接')
-    parser.add_argument('--url', '-u', dest='url_opt', help='微信文章链接')
-    parser.add_argument('--output', '-o', help='输出文件路径')
+    parser.add_argument('--url', '-u', required=True, help='微信文章链接')
+    parser.add_argument('--output', '-o', default='./wechat-article.md', help='输出文件路径（默认：./wechat-article.md）')
     parser.add_argument('--raw', action='store_true', help='输出原始 JSON')
+    parser.add_argument('--summary', '-s', action='store_true', help='只输出摘要（适合对话框显示）')
+    parser.add_argument('--stdout', action='store_true', help='输出到控制台（不保存文件）')
     
     args = parser.parse_args()
-    url = args.url or args.url_opt
     
-    if not url:
-        print("❌ 请提供微信文章链接")
-        print("\n用法:")
-        print("  python3 fetch.py <链接>")
-        print("  python3 fetch.py --url <链接> --output article.md")
-        return
-    
+    print(f"📡 正在获取：{args.url}", file=sys.stderr)
     fetcher = WeixinFetcher()
-    result = fetcher.fetch(url)
+    result = fetcher.fetch(args.url)
     
     if args.raw:
         import json
         print(json.dumps(result, ensure_ascii=False, indent=2))
+    elif args.summary:
+        # 只输出摘要
+        md = fetcher.to_markdown(result)
+        print(md)
+    elif args.stdout:
+        # 输出到控制台（不保存文件）
+        md = fetcher.to_markdown(result)
+        print(md)
     else:
+        # 默认保存到文件
         md = fetcher.to_markdown(result)
         
-        if args.output:
-            Path(args.output).parent.mkdir(parents=True, exist_ok=True)
-            with open(args.output, 'w', encoding='utf-8') as f:
-                f.write(md)
-            print(f"✅ 已保存到：{args.output}")
-        else:
-            print(md)
+        # 使用当前目录作为输出路径（跨平台兼容）
+        import os
+        output_path = os.path.abspath(os.path.expanduser(args.output))
+        
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(md)
+        print(f"✅ 已保存到：{output_path}", file=sys.stderr)
+        print(f"\n📄 文件预览（前 10 行）：")
+        with open(output_path, 'r', encoding='utf-8') as f:
+            for i, line in enumerate(f):
+                if i < 10:
+                    print(line, end='')
+                else:
+                    print("...")
+                    break
 
 
 if __name__ == '__main__':
