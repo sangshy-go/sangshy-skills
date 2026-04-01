@@ -139,6 +139,31 @@ class WeixinFetcher:
             'read_time_minutes': max(1, len(content) // 300)
         }
     
+    def to_summary(self, data: dict) -> str:
+        """生成内容总结"""
+        if not data.get('success'):
+            return f"❌ 获取失败：{data.get('error', '未知错误')}"
+        
+        # 提取关键信息
+        paragraphs = data['content'].split('\n\n')
+        
+        # 生成总结（前 3 段 + 关键信息）
+        summary = f"# {data['title']}\n\n"
+        summary += f"**公众号**：{data['account']} | **作者**：{data['author']} | **发布时间**：{data['publish_time']}\n"
+        summary += f"**字数**：{data['stats']['char_count']} | **阅读时间**：{data['stats']['read_time_minutes']} 分钟\n\n"
+        summary += "---\n\n"
+        summary += "## 📝 文章总结\n\n"
+        
+        # 输出前 3-5 段作为总结
+        for i, para in enumerate(paragraphs[:5], 1):
+            if len(para) > 20:  # 忽略太短的段落
+                summary += f"{para}\n\n"
+        
+        summary += "...\n\n"
+        summary += "> 💡 提示：完整内容请使用 `--full` 参数查看\n"
+        
+        return summary
+    
     def to_markdown(self, data: dict) -> str:
         """转换成 Markdown 格式"""
         if not data.get('success'):
@@ -168,7 +193,7 @@ def main():
     parser.add_argument('--url', '-u', required=True, help='微信文章链接')
     parser.add_argument('--output', '-o', default='./wechat-article.md', help='输出文件路径（默认：./wechat-article.md）')
     parser.add_argument('--raw', action='store_true', help='输出原始 JSON')
-    parser.add_argument('--summary', '-s', action='store_true', help='只输出摘要（适合对话框显示）')
+    parser.add_argument('--full', '-f', action='store_true', help='输出完整内容（默认输出总结）')
     parser.add_argument('--stdout', action='store_true', help='输出到控制台（不保存文件）')
     
     args = parser.parse_args()
@@ -180,26 +205,17 @@ def main():
     if args.raw:
         import json
         print(json.dumps(result, ensure_ascii=False, indent=2))
-    elif args.summary:
-        # 只输出摘要
-        md = fetcher.to_markdown(result)
-        print(md)
-    elif args.stdout:
-        # 输出到控制台（不保存文件）
-        md = fetcher.to_markdown(result)
-        print(md)
-    else:
-        # 默认保存到文件
+    elif args.full:
+        # 输出完整内容到文件
         md = fetcher.to_markdown(result)
         
-        # 使用当前目录作为输出路径（跨平台兼容）
         import os
         output_path = os.path.abspath(os.path.expanduser(args.output))
         
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(md)
-        print(f"✅ 已保存到：{output_path}", file=sys.stderr)
+        print(f"✅ 完整内容已保存到：{output_path}", file=sys.stderr)
         print(f"\n📄 文件预览（前 10 行）：")
         with open(output_path, 'r', encoding='utf-8') as f:
             for i, line in enumerate(f):
@@ -208,6 +224,10 @@ def main():
                 else:
                     print("...")
                     break
+    else:
+        # 默认输出总结到控制台
+        summary = fetcher.to_summary(result)
+        print(summary)
 
 
 if __name__ == '__main__':

@@ -30,22 +30,19 @@ pip install -r requirements.txt
 https://mp.weixin.qq.com/s/xxxx
 ```
 
-AI 会自动调用此 skill 读取内容。
+AI 会自动调用此 skill 读取内容并生成总结。
 
 ### 方式 2：命令行
 
 ```bash
-# 默认保存到文件（当前目录）
+# 默认输出总结（控制台）
 python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx
 
+# 查看完整内容（保存到文件）
+python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --full
+
 # 保存到指定位置
-python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --output ~/Downloads/article.md
-
-# 输出到控制台（不保存文件）
-python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --stdout
-
-# 只输出摘要
-python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --summary
+python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --full --output ~/Downloads/article.md
 
 # 输出原始 JSON
 python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --raw
@@ -56,10 +53,21 @@ python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --raw
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
 | `--url, -u` | 微信文章链接（必填） | - |
+| `--full, -f` | 输出完整内容（保存到文件） | `false` |
 | `--output, -o` | 输出文件路径 | `./wechat-article.md` |
-| `--stdout` | 输出到控制台 | `false` |
-| `--summary, -s` | 只输出摘要 | `false` |
 | `--raw` | 输出原始 JSON | `false` |
+
+### 输出说明
+
+**默认行为**：输出文章总结到控制台
+- 标题、公众号、作者、发布时间
+- 前 3-5 段关键内容
+- 适合快速了解文章大意
+
+**使用 --full**：保存完整内容到文件
+- 完整的 Markdown 格式文章
+- 包含所有段落和图片链接
+- 适合深度阅读和存档
 
 ## 📋 功能
 
