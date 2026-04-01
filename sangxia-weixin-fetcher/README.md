@@ -35,14 +35,31 @@ AI 会自动调用此 skill 读取内容。
 ### 方式 2：命令行
 
 ```bash
-python3 scripts/fetch.py https://mp.weixin.qq.com/s/xxxx
+# 默认保存到文件（当前目录）
+python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx
+
+# 保存到指定位置
+python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --output ~/Downloads/article.md
+
+# 输出到控制台（不保存文件）
+python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --stdout
+
+# 只输出摘要
+python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --summary
+
+# 输出原始 JSON
+python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --raw
 ```
 
-### 方式 3：保存到文件
+### 参数说明
 
-```bash
-python3 scripts/fetch.py --url https://mp.weixin.qq.com/s/xxxx --output article.md
-```
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `--url, -u` | 微信文章链接（必填） | - |
+| `--output, -o` | 输出文件路径 | `./wechat-article.md` |
+| `--stdout` | 输出到控制台 | `false` |
+| `--summary, -s` | 只输出摘要 | `false` |
+| `--raw` | 输出原始 JSON | `false` |
 
 ## 📋 功能
 
@@ -105,9 +122,13 @@ sangxia-weixin-fetcher/
 ├── SKILL.md              # Skill 描述
 ├── README.md             # 本文档
 ├── requirements.txt      # Python 依赖
+├── evals/                # 测试用例目录
+│   └── evals.json       # 测试用例定义
 └── scripts/
     └── fetch.py         # 主脚本
 ```
+
+**evals 目录**：存放 Skill-Creator 评估系统的测试用例，用于自动化测试和基准测试。
 
 ## 🛠️ 技术实现
 

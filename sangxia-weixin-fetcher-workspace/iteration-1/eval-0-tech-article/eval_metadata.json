@@ -1,0 +1,12 @@
+{
+  "eval_id": 0,
+  "eval_name": "tech-article-extraction",
+  "prompt": "读取这篇文章的内容：https://mp.weixin.qq.com/s/udSpp7eMqwiRo5yVShRzLw",
+  "assertions": [],
+  "status": "completed",
+  "fixed_issues": [
+    "公众号名称提取 - 使用 .rich_media_meta_nickname 选择器",
+    "发布时间提取 - 使用正则匹配日期格式",
+    "Markdown 格式 - 段落之间添加空行"
+  ]
+}
