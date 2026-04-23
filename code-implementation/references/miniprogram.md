@@ -37,3 +37,8 @@ miniprogram/
 - 禁止直接使用 `setData` 传递大量数据（只传变化的字段）
 - 禁止在页面 onUnload 后继续 setData
 - 禁止硬编码 appid 和 secret
+
+## 单元测试
+- 工具：miniprogram-simulate + jest
+- 页面逻辑提取到 utils/services 中测试，不直接测试 wxml
+- 重点测试：登录流程、分页加载、数据格式化

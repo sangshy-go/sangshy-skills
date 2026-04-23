@@ -30,3 +30,9 @@ src/
 - 禁止 `any` 类型注解
 - 禁止同步 IO 阻塞事件循环
 - 禁止在路由中写业务逻辑
+
+## 单元测试
+- 工具：pytest + httpx TestClient（FastAPI 集成测试）
+- Service 层：Mock 数据库和外部服务
+- 接口层：`TestClient` 模拟 HTTP 请求
+- 测试文件放在 `tests/` 目录

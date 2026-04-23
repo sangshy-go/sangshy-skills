@@ -32,3 +32,9 @@ pkg/                    # 可复用的公共包
 - 禁止 `panic`（除 init 阶段外）
 - 禁止忽略 error 返回值
 - 禁止全局变量（用依赖注入）
+
+## 单元测试
+- 工具：`testing` 标准库 + testify（断言）+ gomock（Mock）
+- Service 层：Mock repository 接口，测试业务逻辑
+- Handler 层：`httptest` 模拟 HTTP 请求
+- 测试文件与源文件同目录：`users.go` → `users_test.go`

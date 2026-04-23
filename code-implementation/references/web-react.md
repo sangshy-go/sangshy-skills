@@ -25,6 +25,12 @@ src/
 - 通知：sonner
 - 国际化：next-intl（如需要）
 
+## 单元测试
+- 工具：Vitest + Testing Library
+- 测试文件与源文件同目录：`button.tsx` → `button.test.tsx`
+- 只测公共 API 和用户行为，不测实现细节
+- Mock 外部依赖（API 调用、路由、第三方库）
+
 ## 禁止事项
 - 禁止使用 `any` 类型
 - 禁止直接操作 DOM（useRef 除外）

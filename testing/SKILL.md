@@ -20,6 +20,8 @@ description: >
 - Web 前端项目 → `references/web-e2e.md`
 - 纯后端 API 项目 → `references/api-testing.md`
 
+无匹配测试策略时，自行设计合理的测试方案并说明执行方式（如 CLI 用 `go test`/`pytest`，小程序用微信开发者工具内置测试等）。
+
 无前端页面的项目跳过 UI 自动化测试。
 
 ### Step 3：设计测试用例

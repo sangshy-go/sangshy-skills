@@ -10,7 +10,8 @@ description: >
 ## 工作流程
 
 ### Step 1：读取并分析 PRD
-读取 `docs/prd.md`，提取：
+读取 `docs/prd.md`。如 PRD 不存在或内容过少（< 5 行），先与用户确认需求要点或直接调用 requirement-analysis 补充。
+提取：
 - 核心功能模块
 - 数据规模预估（用户量、数据量、并发量）
 - 性能/安全/可用性要求

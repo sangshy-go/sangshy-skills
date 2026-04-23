@@ -25,6 +25,12 @@ src/
 - 表格：v-data-table 或 AG Grid
 - 通知：VueUse 的 useToast
 
+## 单元测试
+- 工具：Vitest + Vue Testing Library
+- 测试文件放在 `__tests__/` 目录或与源文件同目录
+- 测试组件渲染、用户交互、computed 逻辑
+- Mock 外部依赖（API 调用、路由、Pinia store）
+
 ## 禁止事项
 - 禁止使用 `any` 类型
 - 禁止 Options API（统一 Composition API）

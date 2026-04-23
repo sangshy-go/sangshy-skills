@@ -36,3 +36,9 @@ src/main/resources/
 - 禁止 `System.out.println`（用 Logger）
 - 禁止大事务（事务粒度尽量小）
 - 禁止循环调用数据库（批量查询）
+
+## 单元测试
+- 工具：JUnit 5 + Mockito
+- Service 层：Mock repository，测试业务逻辑
+- Controller 层：MockMvc 或 `@WebMvcTest` 测试接口
+- 测试命名：`should_期望行为_when_条件`

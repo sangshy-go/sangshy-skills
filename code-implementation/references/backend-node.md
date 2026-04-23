@@ -35,3 +35,9 @@ src/
 - 禁止在 controller 中直接写业务逻辑（放 service 层）
 - 禁止硬编码配置（走 config/ + 环境变量）
 - 禁止吞掉错误（catch 后必须处理或上报）
+
+## 单元测试
+- 工具：Jest 或 Vitest + Supertest
+- Service 层：Mock 外部依赖和数据库
+- 接口层：Supertest 模拟 HTTP 请求，测试完整请求链路
+- 测试文件与源文件同目录：`users.ts` → `users.test.ts`

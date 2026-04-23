@@ -32,3 +32,8 @@ src/                    # 前端（React/Vue）
 - 禁止在前端直接调用 Node.js API（Tauri 不含 Node）
 - 禁止在 Rust command 中做长时间阻塞操作（用 async command）
 - 禁止硬编码路径（使用 `app_data_dir()` 等路径 API）
+
+## 单元测试
+- Rust 侧：`cargo test`，测试 commands 和 utils 逻辑
+- 前端侧：与 React/Vue 对应的测试框架一致
+- IPC 通信：Mock `invoke` 调用，不依赖真实 Tauri 运行时

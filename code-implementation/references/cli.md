@@ -31,3 +31,9 @@ src/
 - 禁止静默失败（所有错误都要输出到 stderr）
 - 禁止覆盖用户文件时不确认（除非 `--force`）
 - 禁止硬编码路径（使用 `process.cwd()`、`os.homedir()` 等）
+
+## 单元测试
+- Node.js：Jest/Vitest，Mock `process.stdin`/`process.stdout` 和 `fs`
+- Go：`testing` 标准库，测试子命令执行函数
+- Python：pytest + `click.testing.CliRunner`
+- 重点测试：参数解析、错误输出、dry-run 模式
