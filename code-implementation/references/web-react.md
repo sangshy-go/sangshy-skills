@@ -16,8 +16,8 @@ src/
 - 使用 TypeScript strict 模式
 - 状态管理：优先 React Server Components，需要客户端状态用 zustand
 - API 调用：统一走 `lib/api.ts`，使用 fetch + SWR
-- 样式：Tailwind CSS，禁止内联 style
-- 组件规范：单文件组件，Props 用 interface 定义，导出必须有注释
+- 样式：Tailwind CSS，避免内联 style（动态颜色/尺寸除外）
+- 组件规范：单文件组件，Props 用 interface 定义
 
 ## 常见模式
 - 表单：react-hook-form + zod 校验

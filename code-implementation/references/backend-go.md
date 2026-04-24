@@ -21,7 +21,7 @@ pkg/                    # 可复用的公共包
 - ORM：GORM 或 sqlx
 - 配置：viper
 - 日志：zap 或 zerolog
-- 错误处理：自定义 error 类型 + pkg/errors
+- 错误处理：自定义 error 类型 + `fmt.Errorf("%w")` 包装错误
 
 ## API 规范
 - RESTful 风格
